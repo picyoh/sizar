@@ -2,21 +2,29 @@ import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SiGoogle } from "react-icons/si";
+import { signIn } from "@/../auth";
 
 export default function Login() {
   return (
     <div>
       <Header />
       <main className="h-[67vh] flex flex-col items-center justify-center gap-4">
-        <button
-          type="submit"
-          className="w-[18rem] p-[.7rem] border-1 border-solid rounded-md bg-gray-700 flex justify-evenly"
+        <form
+          action={async () => {
+            "use server";
+            await signIn("google");
+          }}
         >
-          <div className="flex items-center">
-            <SiGoogle className="h-[1rem]" />
-          </div>
-          Se connecter avec Google
-        </button>
+          <button
+            type="submit"
+            className="w-[18rem] p-[.7rem] border-1 border-solid rounded-md bg-gray-700 flex justify-evenly"
+          >
+            <div className="flex items-center">
+              <SiGoogle className="h-[1rem]" />
+            </div>
+            Se connecter avec Google
+          </button>
+        </form>
         <hr className="w-1/2" />
         <Suspense>
           <form className="flex flex-col justify-center items-center gap-4">
