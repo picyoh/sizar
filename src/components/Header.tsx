@@ -15,7 +15,7 @@ export default function Header() {
         />
       </Link>
       <nav className="flex justify-evenly items-center gap-8 px-8">
-        <Link href="/">Essayez</Link>
+        <Link href="/tryapp">Essayez</Link>
         <Link href="/signup">Creer un compte</Link>
         <Link href="/login">Se connecter</Link>
       </nav>
