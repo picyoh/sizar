@@ -1,16 +1,17 @@
-'use client'
+"use client";
 
-import React, { useRef, useEffect } from "react";
-import { Suspense } from "react";
+import { useRef, useEffect } from "react";
+import useWindowSize from "@/lib/useWindowSize";
 
-export default function Video() {
+export default function Camera() {
+  const { width, height } = useWindowSize();
   const camRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    getVideo();
+    getCamera();
   });
-  const getVideo = async () => {
+
+  const getCamera = async () => {
     try {
       await navigator.mediaDevices
         .getUserMedia({
@@ -29,11 +30,5 @@ export default function Video() {
     }
   };
 
-  return (
-
-    <Suspense>
-      <video width="320" height="240" autoPlay={true} ref={camRef} />
-      <canvas ref={canvasRef} />
-    </Suspense>
-  );
+  return <video width={width} height={height} autoPlay={true} ref={camRef} />;
 }
