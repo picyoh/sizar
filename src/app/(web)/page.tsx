@@ -1,11 +1,7 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div>
-      <Header />
       <main className="px-32 no-scrollbar overflow-y-scroll snap-y snap-mandatory h-[90vh]">
       <div className="flex justify-evenly items-center gap-4 h-3/4 snap-center">
         <div className="flex-1 gap-4">
@@ -100,7 +96,5 @@ export default function Home() {
         </p>
       </div>
     </main>
-      <Footer />
-    </div>
   );
 }

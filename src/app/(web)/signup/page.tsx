@@ -1,13 +1,8 @@
-import { Suspense } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { SiGoogle } from "react-icons/si";
 import { signIn } from "@/../auth";
 
 export default function Login() {
   return (
-    <div>
-      <Header />
       <main className="h-[67vh] flex flex-col items-center justify-center gap-4">
         <form
           action={async () => {
@@ -26,7 +21,6 @@ export default function Login() {
           </button>
         </form>
         <hr className="w-1/2" />
-        <Suspense>
           <form className="flex flex-col justify-center items-center gap-4">
             <label>Adresse mail:</label>
             <input
@@ -53,9 +47,6 @@ export default function Login() {
               S&#39;inscrire
             </button>
           </form>
-        </Suspense>
       </main>
-      <Footer />
-    </div>
   );
 }
