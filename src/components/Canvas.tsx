@@ -6,6 +6,6 @@ export default function Canvas() {
   const { width, height } = useWindowSize();
 
   return (
-    <canvas width={width} height={height} className="absolute t-0 l-0"></canvas>
+    <canvas width={width} height={height} className="absolute top-0 left-0"></canvas>
   );
 }

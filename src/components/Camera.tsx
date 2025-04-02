@@ -22,7 +22,6 @@ export default function Camera() {
           if (camRef.current) {
             const cam = camRef.current;
             cam.srcObject = stream;
-            cam.play();
           }
         });
     } catch (error) {
