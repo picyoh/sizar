@@ -1,33 +1,31 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import useWindowSize from "@/lib/useWindowSize";
+import useWindowSize from "@/hooks/useWindowSize";
 
 export default function Camera() {
-  const { width, height } = useWindowSize();
+  const { width } = useWindowSize();
   const camRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const getCamera = async () => {
+      try {
+        await navigator.mediaDevices
+          .getUserMedia({
+            video: true,
+            audio: false,
+          })
+          .then((stream) => {
+            if (camRef.current) {
+              camRef.current.srcObject = stream;
+            }
+          });
+      } catch (error) {
+        console.error("No access to camera", error);
+      }
+    };
     getCamera();
-  });
+  }, []);
 
-  const getCamera = async () => {
-    try {
-      await navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: false,
-        })
-        .then((stream) => {
-          if (camRef.current) {
-            const cam = camRef.current;
-            cam.srcObject = stream;
-          }
-        });
-    } catch (error) {
-      console.error("No access to camera", error);
-    }
-  };
-
-  return <video width={width} height={height} autoPlay={true} ref={camRef} />;
+  return <video id="camera" width={width} ref={camRef} autoPlay={true} />;
 }
