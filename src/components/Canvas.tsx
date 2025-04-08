@@ -10,19 +10,21 @@ export default function Canvas() {
   useEffect(() => {
     const camera = document.getElementById("camera");
     if (camera) {
-      const resizeObserver = new ResizeObserver(()=>{
+      const resizeObserver = new ResizeObserver(() => {
         setWidth(camera.clientWidth);
         setHeight(camera.clientHeight);
       });
-      resizeObserver.observe(camera)
+      resizeObserver.observe(camera);
     }
   }, []);
+
   return (
     <canvas
+      id="canny"
       ref={canvasRef}
       width={width}
       height={height}
       className="absolute top-0 left-0"
-    ></canvas>
+    />
   );
 }
