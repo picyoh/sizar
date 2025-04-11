@@ -5,11 +5,11 @@ class CV {
     this.worker.postMessage(event);
     return new Promise((res, rej) => {
       let interval = setInterval(() => {
-        const status = this_status[msg];
+        const status = this._status[msg];
         if (status[0] === "done") res(status[1]);
         if (status[0] === "error") rej(status[1]);
-        if (status[0] === "loading") {
-          delete this_status[msg];
+        if (status[0] !== "loading") {
+          delete this._status[msg];
           clearInterval(interval);
         }
       }, 50);
@@ -18,14 +18,20 @@ class CV {
 
   load() {
     this._status = {};
-    this.worker = new Worker("/js/cv.worker.js");
+    this.worker = new Worker("../../js/cv.worker.js");
 
-    this.worker.onmessage = (e) => (this._status[e.data.msg] = ["done", e]);
-    this.worker.onerror = (e) => (this._status[e.data.msg] = ["error", e]);
+    this.worker.onmessage = (e) => {
+      this._status[e.data.msg] = ["done", e];
+    };
+    this.worker.onerror = (e) => {
+      this._status[e.type] = ["error", e];
+    };
     return this._dispatch({ msg: "load" });
+  }
+
+  imageProcessing(payload) {
+    return this._dispatch({ msg: "imageProcessing", payload });
   }
 }
 
-//
-const newCV = new CV();
-export default newCV;
+export default new CV();

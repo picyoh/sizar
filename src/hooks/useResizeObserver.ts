@@ -1,33 +1,21 @@
-"use client";
+import { useRef, useEffect, useState, RefObject } from "react";
 
-import { RefObject, useEffect, useState } from "react";
 
-export default function useResizeObserver(
-  element: RefObject<HTMLVideoElement | null>
-) {
-  const [size, setSize] = useState({
-    winWidth: 0,
-    winHeight: 0,
-    elWidth: 0,
-    elHeight: 0,
-  });
+export type ResizeObserverTuple = [RefObject<HTMLVideoElement | null>, DOMRect | undefined]
+export default function useResizeObserver(): ResizeObserverTuple {
+  const ref:RefObject<HTMLVideoElement | null> = useRef(null);
+  const [rect, setRect] = useState<DOMRect>();
 
   useEffect(() => {
-    if (typeof window !== undefined && element !== null && element.current) {
-      const resizeObserver = new ResizeObserver(() => {
-        setSize({
-          winWidth: window.innerWidth,
-          winHeight: window.innerHeight,
-          elWidth: element.current!.clientWidth,
-          elHeight: element.current!.clientHeight,
-        });
-      });
-      if (element.current) resizeObserver.observe(element.current);
-      return () => resizeObserver.disconnect();
-    }
-  }, [element]);
+    const obs = new ResizeObserver(() => {
+      if (ref.current) {
+        const boundingRect = ref.current.getBoundingClientRect();
+        setRect(boundingRect);
+      }
+    });
+    if(ref.current) obs.observe(ref.current);
 
-  //console.log(size,element)
-
-  return size;
+    return () => obs.disconnect();
+  }, [ref]);
+  return [ref, rect];
 }
