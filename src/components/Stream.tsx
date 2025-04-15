@@ -2,58 +2,52 @@
 
 import { useState, useRef, useEffect } from "react";
 import useResizeObserver from "@/hooks/useResizeObserver";
-import getVideoStream from "@/lib/getVideoStream"
-import processCV  from "@/lib/processCV";
-
-
+import useVideoStream from "@/hooks/useVideoStream";
+import { loadCV, processCV } from "@/lib/processCV";
 
 export default function Stream() {
   //TODO: resizeObserver trigger when resizing window ?
   const [videoElement, rect] = useResizeObserver();
-  const canvasElement = useRef<HTMLCanvasElement>(null);
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const [rec, setRec] = useState(false);
-  const [isLoaded, setLoaded] = useState(false);
-  const [isProcessing, setProcessing] = useState(false);
+  const stream = useVideoStream();
+  const outputElement = useRef<HTMLCanvasElement>(null);
 
   // Get camera stream
   useEffect(() => {
-    if (!rec && videoElement.current) {
-      getVideoStream(videoElement);
-      setRec(true);
-    }
-  }, [rec, videoElement]);
-  
-  // Adjust video and canvas sizes
+    if (stream !== null && videoElement.current)
+      videoElement.current.srcObject = stream;
+  }, [videoElement, stream]);
 
-  useEffect(()=>{
-    if(window){
-      setWidth(window.innerWidth)
+  // Adjust video and canvas sizes
+  useEffect(() => {
+    // Set width on Canvas and Video elements
+    if (window) {
+      setWidth(window.innerWidth);
     }
-    if(videoElement !== null && rect !== undefined){
+    // Set height on Canvas and Video elements
+    if (videoElement !== null && rect !== undefined) {
       setHeight(rect.height);
-      setInterval(()=>{
-        setLoaded(true);
-      }, 500) 
     }
-  }, [videoElement, rect])
+  }, [videoElement, rect]);
+
+  // Load OpenCV worker
+  useEffect(() => {}, [loaded]);
 
   // Trigger openCV
   useEffect(() => {
-    if (isLoaded && !isProcessing) {
-      processCV(videoElement, canvasElement);
+    if (loaded && !isProcessing) {
+      //processCV(videoElement, outputElement);
       setProcessing(true);
-      console.log()
     }
-  }, [isLoaded, isProcessing, videoElement, canvasElement]);
+  }, [loaded, isProcessing, videoElement, outputElement]);
 
   return (
     <div>
       <video id="camera" width={width} ref={videoElement} autoPlay={true} />
       <canvas
-        id="canny"
-        ref={canvasElement}
+        id="output"
+        ref={outputElement}
         width={width}
         height={height}
         className="absolute top-0 left-0"

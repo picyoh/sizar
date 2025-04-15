@@ -2,6 +2,7 @@ class CV {
   _dispatch(event) {
     const { msg } = event;
     this._status[msg] = ["loading"];
+    console.log(event)
     this.worker.postMessage(event);
     return new Promise((res, rej) => {
       let interval = setInterval(() => {
@@ -29,8 +30,8 @@ class CV {
     return this._dispatch({ msg: "load" });
   }
 
-  imageProcessing(payload) {
-    return this._dispatch({ msg: "imageProcessing", payload });
+  processVideo(payload) {
+    return this._dispatch({ msg: "processVideo", payload});
   }
 }
 

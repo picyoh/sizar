@@ -3,20 +3,15 @@ async function waitForOpenCV(callbackFn) {
   callbackFn(true);
 }
 
-function imageProcessing({ msg, payload }) {
-  // convert imageData to mat
-  const img = cv.matFromImageData(payload);
-  // create a new mat
-  let result = new cv.Mat();
-  // Greyscale
-  cv.cvtColor(img, result, cv.COLOR_RGBA2GRAY);
-  postMessage({ msg, payload: imageDataFromMat(result) });
+function processVideo({ msg, payload }) {
+console.log(msg, payload.input)
 }
 
 function imageDataFromMat(mat) {
   // get channel number to know image color mode
   const channel = mat.channels();
   const img = new cv.Mat();
+
   switch (channel) {
     case 4:
       mat.copyTo(img);
@@ -31,9 +26,10 @@ function imageDataFromMat(mat) {
       postMessage({ msg: "error" });
       break;
   }
-  console.log(img.data, img.cols, img.rows)
-
-  return new ImageData(new Uint8ClampedArray(img.data), img.cols, img.rows);
+  console.log(channel)
+  const imgData = new ImageData(new Uint8ClampedArray(img.data), img.cols, img.rows);
+  img.delete();
+  return imgData;
 }
 
 onmessage = function (e) {
@@ -42,15 +38,15 @@ onmessage = function (e) {
     case "load": {
       // Import Webassembly script
       self.importScripts("./opencv.js");
-      console.log(cv);
       waitForOpenCV(function (success) {
         if (success) postMessage({ msg: e.data.msg });
         else throw new Error("Error on loading OpenCV");
       });
       break;
     }
-    case "imageProcessing":
-      return imageProcessing(e.data);
+    case "processVideo":
+      console.log(e.data);
+      return processVideo(e.data);
     default:
       break;
   }
