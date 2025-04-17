@@ -38,12 +38,10 @@ export default function Stream() {
   // set Ready
   useEffect(()=>{
     if(ratio && loaded && ratio * height === width) setReady(true);
-    console.log(ratio * height, width, loaded, ready)
   }, [ratio, width, height, loaded, ready])
 
   // Trigger OpenCV transformation
   useEffect(() => {
-    console.log(`lauch ocv : ${ready}`);
     if (ready) processCV(videoElement, outputElement);
   }, [ready, videoElement, outputElement]);
 

@@ -7,7 +7,7 @@ function processVideo({ msg, payload }) {
   console.log(payload);
   const src = cv.matFromImageData(payload);
   let dst = new cv.Mat();
-  const depth = src.type()
+  const depth = src.type() % 8;
   const scale = depth <= cv.CV_8S ? 1.0 : depth <= cv.CV_32S ? 1.0 /256.0 : 255.0;
   const shift = depth === cv.CV_8S || depth === cv.CV_16S ? 128.0 : 0.0;
   console.log(scale, shift)

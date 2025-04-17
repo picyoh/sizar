@@ -4,7 +4,7 @@ export default function useProcessCV(
   videoElement: RefObject<HTMLVideoElement | null>,
   outputElement: RefObject<HTMLCanvasElement | null>
 ) {
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState<ImageData | null>(null);
   const [processing, setProcessing] = useState(false);
   if (videoElement.current && outputElement.current) {
     // Get context
@@ -17,7 +17,7 @@ export default function useProcessCV(
       ctx.drawImage(videoElement.current, 0, 0, width, height);
       // Get video stream image
       const inputImage = ctx.getImageData(0, 0, width, height);
-      //setImageData(inputImage);
+      setImageData(inputImage);
     }
   }
 
