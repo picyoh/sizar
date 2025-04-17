@@ -1,17 +1,5 @@
-import { RefObject, useState, useEffect } from "react";
+import { RefObject } from "react";
 import cv from "@/service/cv";
-
-export async function loadCV() {
-  try{
-    await cv.load()
-    .then((res) => {
-      console.log(res.returnValue)
-      return res.returnValue;
-    });
-  } catch(error) {
-    console.error('No access to opencv.js', error);
-  }
-}
 
 export async function processCV(
   videoElement: RefObject<HTMLVideoElement | null>,
@@ -27,13 +15,10 @@ export async function processCV(
       // Draw video to canvas
       ctx.drawImage(videoElement.current, 0, 0, width, height);
       // Get video stream image
-      const inputImage = ctx.getImageData(0, 0, width, height).data;
-      const processedImage: ImageData = await cv.processVideo({
-        input: inputImage,
-        width: width,
-        height: height,
-      });
-      //ctx.putImageData(processedImage.data.payload, 0, 0);
+      const inputImage = ctx.getImageData(0, 0, width, height);
+      const processedImage = await cv.processVideo(inputImage);
+      console.log(processedImage.data.payload);
+      ctx.putImageData(processedImage.data.payload, 0, 0);
       //return false;
     }
   }

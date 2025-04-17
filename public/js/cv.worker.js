@@ -4,36 +4,48 @@ async function waitForOpenCV(callbackFn) {
 }
 
 function processVideo({ msg, payload }) {
-console.log(msg, payload.input)
+  console.log(payload);
+  const src = cv.matFromImageData(payload);
+  let dst = new cv.Mat();
+  const depth = src.type()
+  const scale = depth <= cv.CV_8S ? 1.0 : depth <= cv.CV_32S ? 1.0 /256.0 : 255.0;
+  const shift = depth === cv.CV_8S || depth === cv.CV_16S ? 128.0 : 0.0;
+  console.log(scale, shift)
+  src.convertTo(dst, cv.CV_8U, scale, shift);
+  cv.cvtColor(dst, dst, cv.COLOR_BGRA2GRAY, 0);
+  console.log(dst)
+  postMessage({ msg, payload: imageDataFromMat(dst) });
 }
 
-function imageDataFromMat(mat) {
+function imageDataFromMat(src) {
   // get channel number to know image color mode
-  const channel = mat.channels();
-  const img = new cv.Mat();
-
+  const channel = src.channels();
+  const dst = new cv.Mat();
   switch (channel) {
     case 4:
-      mat.copyTo(img);
+      src.copyTo(dst);
       break;
     case 3:
-      cv.cvtColor(mat, img, cv.COLOR_RGB2RGBA);
+      cv.cvtColor(src, dst, cv.COLOR_RGB2RGBA);
       break;
     case 1:
-      cv.cvtColor(mat, img, cv.COLOR_GRAY2RGBA);
+      cv.cvtColor(src, dst, cv.COLOR_GRAY2RGBA);
       break;
     default:
       postMessage({ msg: "error" });
       break;
   }
-  console.log(channel)
-  const imgData = new ImageData(new Uint8ClampedArray(img.data), img.cols, img.rows);
-  img.delete();
+  const imgData = new ImageData(
+    new Uint8ClampedArray(dst.data),
+    dst.cols,
+    dst.rows
+  );
+  //TODO: check if delete
+  // //dst.delete();
   return imgData;
 }
 
 onmessage = function (e) {
-  console.log(e.data.msg);
   switch (e.data.msg) {
     case "load": {
       // Import Webassembly script
@@ -45,15 +57,8 @@ onmessage = function (e) {
       break;
     }
     case "processVideo":
-      console.log(e.data);
       return processVideo(e.data);
     default:
       break;
   }
 };
-
-/* onerror = function (e){
-  console.log(e)
-
-}
- */
