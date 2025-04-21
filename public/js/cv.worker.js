@@ -4,17 +4,49 @@ async function waitForOpenCV(callbackFn) {
 }
 
 function processVideo({ msg, payload }) {
-  console.log(payload);
+  // Matrix from imageDate
   const src = cv.matFromImageData(payload);
-  let dst = new cv.Mat();
-  const depth = src.type() % 8;
-  const scale = depth <= cv.CV_8S ? 1.0 : depth <= cv.CV_32S ? 1.0 /256.0 : 255.0;
-  const shift = depth === cv.CV_8S || depth === cv.CV_16S ? 128.0 : 0.0;
-  console.log(scale, shift)
-  src.convertTo(dst, cv.CV_8U, scale, shift);
-  cv.cvtColor(dst, dst, cv.COLOR_BGRA2GRAY, 0);
-  console.log(dst)
+  // Create new matrix
+  const dst = new cv.Mat();
+  // PRE
+  // Convert image to greyscale
+  cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+  // Blur
+  const ksize = new cv.Size(3, 3);
+  const anchor = new cv.Point(-1, -1);
+  cv.blur(dst, dst, ksize, anchor, cv.BORDER_DEFAULT);
+  // Canny Edge detector
+  cv.Canny(dst, dst, 190, 380, 5, false);
+  // Closing (dilate then erode)
+  const M = cv.Mat.ones(5, 5, cv.CV_8U);
+  cv.morphologyEx(dst, dst, cv.MORPH_CLOSE, M);
+
+  // Find contours
+  const contours = new cv.MatVector();
+  const hierarchy = new cv.Mat();
+  cv.findContours(
+    dst,
+    contours,
+    hierarchy,
+    cv.RETR_CCOMP,
+    cv.CHAIN_APPROX_SIMPLE
+  );
+  //console.log(contours.$$.count.value)
+  for (let i = 0; i < contours.size(); i++) {
+    const color = new cv.Scalar(
+      Math.round(Math.random() * 255),
+      Math.round(Math.random() * 255),
+      Math.round(Math.random() * 255)
+    );
+    cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+  }
+  // post messsage and convert matToImageData
   postMessage({ msg, payload: imageDataFromMat(dst) });
+  src.delete();
+  M.delete();
+  contours.delete();
+  hierarchy.delete();
+  dst.delete();
 }
 
 function imageDataFromMat(src) {
@@ -40,8 +72,7 @@ function imageDataFromMat(src) {
     dst.cols,
     dst.rows
   );
-  //TODO: check if delete
-  // //dst.delete();
+  dst.delete();
   return imgData;
 }
 

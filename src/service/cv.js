@@ -2,7 +2,7 @@ class CV {
   _dispatch(event) {
     const { msg } = event;
     this._status[msg] = ["loading"];
-    console.log(event)
+    //console.log(msg)
     this.worker.postMessage(event);
     return new Promise((res, rej) => {
       let interval = setInterval(() => {
