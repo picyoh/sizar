@@ -1,12 +1,24 @@
 import Image from "next/image";
-import Link from "next/link";
-import {
-  SiLinkedin,
-  SiBuymeacoffee,
-  SiReddit
-} from "react-icons/si";
+import { SiLinkedin, SiBuymeacoffee, SiReddit } from "react-icons/si";
+import SocialMedias from "./SocialMedias";
+import Links from "./Links";
 
 export default function Footer() {
+  // TODO: change links
+  const socialMedias = [
+    { id:"buymeacofee", href: "https://www.buymeacoffee.com/manures", icon: <SiBuymeacoffee /> },
+    { id:"linkedin", href: "https://www.buymeacoffee.com/manures", icon: <SiLinkedin /> },
+    { id:"reddit", href: "https://www.buymeacoffee.com/manures", icon: <SiReddit /> },
+    { id:"quaeres", href: "https://www.buymeacoffee.com/manures", src:"/globe.svg", alt:"Manures icon"},
+  ];
+
+  const links = [
+    {id:"privacy", href:"/terms/privacy", content:"Confidentialite"},
+    {id:"legal", href:"/terms/legal", content:"Mentions Legales"},
+    {id:"cgu", href:"/terms/cgu", content:"C.G.U"},
+    {id:"cgv", href:"/terms/cgv", content:"C.G.V"},
+  ]
+
   return (
     <footer className="bottom-0 flex flex-col justify-evenly bg-gray-900">
       <div className="flex justify-between items-center p-4">
@@ -29,47 +41,29 @@ export default function Footer() {
         </div>
       </div>
       <div id="social_medias" className="flex justify-evenly p-4">
-        <a
-          href="https://www.buymeacoffee.com/manures"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <SiBuymeacoffee />
-        </a>
-        <a
-          href="https://www.linkedin.com/company/manures-dev"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <SiLinkedin />
-        </a>
-        <a
-          href="https://www.reddit.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <SiReddit />
-        </a>
-        <a
-          href="https://www.manures.fr"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Manures icon"
-            width={16}
-            height={16}
-          />
-        </a>
+        {socialMedias.map((element) => {
+          return(
+            <SocialMedias 
+              key={element.id} 
+              href={element.href} 
+              src={element.src}
+              alt={element.alt}
+              icon={element.icon}
+            />
+          );
+        })}
       </div>
       <p className="text-center text-xs">2025 Quaeres</p>
       <div id="internal_links" className="flex justify-evenly text-xs">
-        <Link href="/terms/privacy">Confidentialite</Link>
-        <Link href="/terms/legal">Mentions Legales</Link>
-        <Link href="/terms/cgu">C.G.U</Link>
-        <Link href="/terms/cgv">C.G.V</Link>
+        {links.map((element)=>{
+          return (
+            <Links 
+              key={element.id}
+              href={element.href}
+              content={element.content}
+            />
+          )
+        })}
       </div>
     </footer>
   );

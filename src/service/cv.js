@@ -30,9 +30,9 @@ class CV {
     return this._dispatch({ msg: "load" });
   }
 
-  processVideo(payload) {
-    return this._dispatch({ msg: "processVideo", payload});
+  processImage(payload) {
+    return this._dispatch({ msg: "processObject", payload});
   }
 }
-
-export default new CV();
+const cv = new CV()
+export default cv;
