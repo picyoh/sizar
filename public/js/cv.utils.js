@@ -72,5 +72,4 @@ class Utils {
     return imgData;
   }
 }
-const utils = new Utils();
-return utils
+new Utils();

@@ -9,7 +9,7 @@ export default function Header() {
     { id: "login", href: "/login", content: "Se connecter" },
   ];
   return (
-    <header className="sticky top-0 w-full bg-gray-900 flex justify-between">
+    <header className="sticky top-0 w-full bg-gray-900 flex justify-between items-center p-4">
       <Link href="/">
         <Image
           aria-hidden
@@ -20,7 +20,7 @@ export default function Header() {
           className="mix-blend-multiply"
         />
       </Link>
-      <nav>
+      <nav className="flex justify-evenly gap-4">
         {links.map((element) => {
           return (
             <Links

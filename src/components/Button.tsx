@@ -1,40 +1,37 @@
-import { ReactNode, RefObject } from "react";
-//import useButtonStore from "@/store/buttonStore";
+"use client";
+
+import React, { ReactNode, RefObject } from "react";
+import useButtonStore from "@/store/buttonStore";
 
 export default function Button({
+  id,
   title,
   icon,
   ref,
 }: {
+  id: string;
   title: string;
   icon: ReactNode;
   ref: RefObject<HTMLButtonElement | null>;
 }) {
-  //TODO: link to store
-/*   const buttonState = useButtonStore((state)=> state.buttonState)
-  const setButtonState = useButtonStore((state) => state.setButtonState); */
-  let buttonState: string[] = [];
-  const setButtonState = (arr: string[])=> {
-    buttonState = arr;
-  }
-  const buttonAction = (title: string) => {
-    const copy = buttonState.slice();
-    copy.push(title)
-    const compare = new Set(copy).size !== copy.length;
-    if(compare){
-      const index = copy.indexOf(title);
-      const newArray = copy.splice(index)
-      setButtonState(newArray)
-    }
+  const buttonState = useButtonStore((state) => state.buttonState);
+  const setButtonState = useButtonStore((state) => state.setButtonState);
 
+  function buttonAction(e: React.MouseEvent<HTMLButtonElement>) {
+    const id = e.currentTarget.id;
+    if (buttonState.includes(id))
+      setButtonState(buttonState.filter((element) => element !== id));
+    else setButtonState([...buttonState, id]);
   }
+  console.log(buttonState);
 
   return (
     <>
       <button
+        id={id}
         title={title}
         ref={ref}
-        onClick={()=> buttonAction(title)}
+        onClick={buttonAction}
         className="flex p-4 border-2 border-solid"
       >
         {icon}

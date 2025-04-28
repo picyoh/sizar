@@ -12,18 +12,20 @@ export default function Panel() {
   const surfaceRef = useRef<HTMLButtonElement | null>(null);
   const setSurfaceRef = useButtonStore((state) => state.setSurfaceRef);
 
+  // Set style to buttons icons
+  const iconClassName = "pointer-events-none";
   // Button description
   const content = [
     {
       id: "object",
       title: "Detection d'objets",
-      icon: <TbHexagon3D />,
+      icon: <TbHexagon3D className={iconClassName} />,
       ref: objectRef,
     },
     {
       id: "surface",
       title: "Detection de surfaces",
-      icon: <TbCube3dSphere />,
+      icon: <TbCube3dSphere className={iconClassName} />,
       ref: surfaceRef,
     },
   ];
@@ -39,6 +41,7 @@ export default function Panel() {
         return (
           <Button
             key={element.id}
+            id={element.id}
             title={element.title}
             icon={element.icon}
             ref={element.ref}
