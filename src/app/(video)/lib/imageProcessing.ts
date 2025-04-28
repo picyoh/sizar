@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import cv from "@/service/cv";
+import cv from "@/app/(video)/service/cv";
 
 export async function imageProcessing(
   videoElement: RefObject<HTMLVideoElement | null>,

@@ -11,6 +11,7 @@ function processImage({ msg, payload }) {
   // pre Processing 
   utils.upstream(src, dst);
   // TODO: get mode then trigger utils functions (surface -> objet)
+  console.log()
   if(payload.mode.contains("surface")) utils.surfaceProcess()
   //Process image
   cv.threshold(dst,dst, 90, 180, cv.THRESH_BINARY);

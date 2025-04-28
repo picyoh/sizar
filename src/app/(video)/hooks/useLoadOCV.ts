@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import cv from "@/service/cv";
+import cv from "@/app/(video)/service/cv";
 
 export default function useLoadCV() {
   const [ready, setReady] = useState(false);

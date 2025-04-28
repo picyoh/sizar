@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import useVideoStream from "@/hooks/useVideoStream";
-import useResizeObserver from "@/hooks/useResizeObserver";
-import useVideoStore from "@/store/videoStore";
+import useVideoStream from "@/app/(video)/hooks/useVideoStream";
+import useResizeObserver from "@/app/(video)/hooks/useResizeObserver";
+import useVideoStore from "@/app/(video)/store/videoStore";
 
 export default function Video() {
   //TODO: resizeObserver trigger when resizing window ?

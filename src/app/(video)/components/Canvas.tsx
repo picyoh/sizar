@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import useVideoStore from "@/store/videoStore";
-import { imageProcessing } from "@/lib/imageProcessing";
-import useButtonStore from "@/store/buttonStore";
+import useVideoStore from "@/app/(video)/store/videoStore";
+import { imageProcessing } from "@/app/(video)/lib/imageProcessing";
+import useButtonStore from "@/app/(video)/store/buttonStore";
 
 export default function Canvas() {
   // Canvas elements

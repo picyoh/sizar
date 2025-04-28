@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Button from "./Button";
 import { TbHexagon3D, TbCube3dSphere } from "react-icons/tb";
-import useButtonStore from "@/store/buttonStore";
+import useButtonStore from "@/app/(video)/store/buttonStore";
 
 export default function Panel() {
   // Get Object button reference

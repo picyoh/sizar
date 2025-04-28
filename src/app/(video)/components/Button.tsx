@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode, RefObject } from "react";
-import useButtonStore from "@/store/buttonStore";
+import useButtonStore from "@/app/(video)/store/buttonStore";
 
 export default function Button({
   id,
@@ -23,7 +23,6 @@ export default function Button({
       setButtonState(buttonState.filter((element) => element !== id));
     else setButtonState([...buttonState, id]);
   }
-  console.log(buttonState);
 
   return (
     <>
