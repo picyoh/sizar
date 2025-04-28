@@ -9,7 +9,8 @@ class Utils {
     return dst;
   }
 
-  objProcess() {
+  objectProcess() {
+    console.log("object process cv utils")
     /*   // Canny Edge detector
   cv.Canny(dst, dst, 190, 380, 5, false);
   // Closing (dilate then erode)
@@ -39,10 +40,15 @@ class Utils {
     );
     //console.log(color)
     cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
-  } */
+  }
 
     contours.delete();
     hierarchy.delete();
+    */
+  }
+
+  surfaceProcess() {
+    console.log("surface process cv utils");
   }
 
   imageDataFromMat(src) {
@@ -72,4 +78,7 @@ class Utils {
     return imgData;
   }
 }
-new Utils();
+const utils = new Utils();
+if(utils === undefined){
+ console.error("cv.utils error") 
+}

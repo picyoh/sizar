@@ -2,7 +2,7 @@ class CV {
   _dispatch(event) {
     const { msg } = event;
     this._status[msg] = ["loading"];
-    //console.log(msg)
+    console.log(msg)
     this.worker.postMessage(event);
     return new Promise((res, rej) => {
       let interval = setInterval(() => {
@@ -19,7 +19,7 @@ class CV {
 
   load() {
     this._status = {};
-    this.worker = new Worker("../../js/cv.worker.js");
+    this.worker = new Worker("../../../../js/cv.worker.js");
 
     this.worker.onmessage = (e) => {
       this._status[e.data.msg] = ["done", e];
@@ -31,7 +31,8 @@ class CV {
   }
 
   processImage(payload) {
-    return this._dispatch({ msg: "processObject", payload});
+    console.log(payload)
+    return this._dispatch({ msg: "processImage", payload});
   }
 }
 const cv = new CV()

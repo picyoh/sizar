@@ -21,9 +21,11 @@ export async function imageProcessing(
     const height = video.clientHeight;
     // Draw video to canvas
     inputCtx.drawImage(video, 0, 0, width, height);
+    console.log(mode)
     // Get video stream image
     const inputImage = inputCtx.getImageData(0, 0, width, height);
     const processedImage = await cv.processImage({inputImage, mode});
+    console.log(mode)
     outputCtx.putImageData(processedImage.data.payload, 0, 0);
   }
 }

@@ -5,14 +5,17 @@ async function waitForOpenCV(callbackFn) {
 
 function processImage({ msg, payload }) {
   // Matrix from imageDate
-  const src = cv.matFromImageData(payload);
+  const src = cv.matFromImageData(payload.inputImage);
+  const mode = payload.mode;
+  // TODO: get mode then trigger utils functions (surface -> objet)
+  console.log(mode[0])
   // Create new matrix
   const dst = new cv.Mat();
+  console.log(utils)
   // pre Processing 
   utils.upstream(src, dst);
-  // TODO: get mode then trigger utils functions (surface -> objet)
-  console.log()
-  if(payload.mode.contains("surface")) utils.surfaceProcess()
+  if(mode.includes("surface")) utils.surfaceProcess();
+  if(mode.includes("object")) utils.objectProcess();
   //Process image
   cv.threshold(dst,dst, 90, 180, cv.THRESH_BINARY);
   // post message and convert matToImageData
