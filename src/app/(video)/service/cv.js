@@ -19,7 +19,7 @@ class CV {
 
   load() {
     this._status = {};
-    this.worker = new Worker("../../../../js/cv.worker.js");
+    this.worker = new Worker("/workers/cv/cv.worker.js");
 
     this.worker.onmessage = (e) => {
       this._status[e.data.msg] = ["done", e];
@@ -31,7 +31,6 @@ class CV {
   }
 
   processImage(payload) {
-    console.log(payload)
     return this._dispatch({ msg: "processImage", payload});
   }
 }
