@@ -1,37 +1,47 @@
 async function waitForOpenCV(callbackFn) {
+  // TODO: promiseAll ?
+  // Load scripts
   cv = cv instanceof Promise ? await cv : cv;
   cvUtils = cvUtils instanceof Promise ? await cvUtils : cvUtils;
-  cvHaar = cvHaar instanceof Promise ? await cvHaar : cvHaar;
-  //cvSurf = cvSurf instanceof Promise ? await cvSurf : cvSurf;
-  console.log(
-    `
-    cv : ${cv}\n
-    cvUtils : ${cvUtils}\n
-    cvHaar : ${cvHaar}\n
-    `
-  );
+  cvDnn = cvDnn instanceof Promise ? await cvDnn : cvDnn;
+  cvBox = cvBox instanceof Promise ? await cvBox : cvBox;
+
+  // TODO: create a promise on laoding
+  // create files on cv file systems
+  cv.FS.mkdir("/dnn");
+  const models = [
+    "./lib/model/configMobNetSSD.prototxt",
+    "./lib/model/mobilenet_iter_73000.caffemodel",
+    "./lib/model/object_detection_classes_pascal_voc.txt"
+  ]
+  models.map((model) => {
+    cvDnn.loadDnn(model)
+  });
+
+  //TODO: get build information
+  // console.info(cv.getBuildInformation());
+
   callbackFn(true);
 }
 
 function processImage({ msg, payload }) {
-  // Matrix from imageDate
+  // Mat from imageDate
   const src = cv.matFromImageData(payload.inputImage);
-  //const mode = payload.mode;
-  // Create new matrix
-  const dst = new cv.Mat();
-  // pre Processing
-  cvUtils.upstream(src, dst);
-  //Process image
-  if (mode.includes("surface")) cvObj.process(src, dst);
-  if (mode.includes("object")) cvSurf.process(src, dst);
-  
-  //cv.threshold(dst, dst, 90, 180, cv.THRESH_BINARY);
-  
-  // post message and convert matToImageData
-  postMessage({ msg, payload: cvUtils.imageDataFromMat(dst) });
-
+  // Get mode
+  const mode = payload.mode;
+  // Init boxes
+  let boxes;
+  // Process image
+  if (mode.includes("surface")) {
+    boxes = cvHough.process(src);
+  }
+  if (mode.includes("object")) {
+    boxes = cvDnn.process(src);
+  }
+  // Post message and convert matToImageData
+  postMessage({ msg, payload: boxes });
+  // Delete source image Mat
   src.delete();
-  dst.delete();
 }
 
 onmessage = function (e) {
@@ -40,14 +50,16 @@ onmessage = function (e) {
       const scripts = [
         "./opencv.js",
         "./lib/cv.utils.js",
-        "./lib/cv.haar.js",
-        "./lib/cv.surface.js",
+        "./lib/cv.dnn.js",
+        "./lib/cv.hough.js",
+        "./lib/cv.box.js",
       ];
       // Import scripts
       scripts.map((script) => importScripts(script));
+      // Wait for promises and return message
       waitForOpenCV(function (success) {
         if (success) postMessage({ msg: e.data.msg });
-        else throw new Error("Error on loading OpenCV");
+        else cvUtils.printError(err);
       });
       break;
     }

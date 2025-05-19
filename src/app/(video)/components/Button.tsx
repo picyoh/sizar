@@ -3,6 +3,8 @@
 import React, { ReactNode, RefObject } from "react";
 import useButtonStore from "@/app/(video)/store/buttonStore";
 
+// TODO: interface
+
 export default function Button({
   id,
   title,

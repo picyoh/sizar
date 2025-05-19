@@ -13,7 +13,7 @@ export default function Header() {
       <Link href="/">
         <Image
           aria-hidden
-          src="/toise.svg"
+          src="img/toise.svg"
           alt="Toise icon"
           width={128}
           height={128}

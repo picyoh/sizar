@@ -7,7 +7,7 @@ export default function Home() {
         <div className="flex-1 gap-4">
           <Image
             className="w-full p-4"
-            src="/cuisine.jpg"
+            src="/img/cuisine.jpg"
             alt="image demonstration"
             width={180}
             height={38}
@@ -29,7 +29,7 @@ export default function Home() {
         <div className="flex-1 gap-4 order-2">
           <Image
             className="w-full p-4"
-            src="/chambre.jpg"
+            src="/img/chambre.jpg"
             alt="image demonstration"
             width={180}
             height={38}
@@ -67,7 +67,7 @@ export default function Home() {
         <div className="flex-1 gap-4">
           <Image
             className="w-full p-4"
-            src="/echelle.jpg"
+            src="/img/echelle.jpg"
             alt="image demonstration"
             width={180}
             height={38}

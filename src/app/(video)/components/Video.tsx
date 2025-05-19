@@ -37,6 +37,7 @@ export default function Video() {
   }, [videoElement, stream, ratio, setRatio]);
 
   // Get displayed video sizes
+
   useEffect(() => {
     // Get maximum dispalyed width
     setWidth(window!.innerWidth);

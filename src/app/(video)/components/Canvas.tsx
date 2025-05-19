@@ -7,23 +7,23 @@ export default function Canvas() {
   // Canvas elements
   const inputElement = useRef<HTMLCanvasElement>(null);
   const outputElement = useRef<HTMLCanvasElement>(null);
-// Actions from store
-    const setInputRef = useVideoStore((state) => state.setInputRef);
-    const setOutputRef = useVideoStore((state) => state.setOutputRef);
-  
+  // Actions from store
+  const setInputRef = useVideoStore((state) => state.setInputRef);
+  const setOutputRef = useVideoStore((state) => state.setOutputRef);
+
   // Video element
-  const videoElement = useVideoStore((state)=> state.videoRef);
+  const videoElement = useVideoStore((state) => state.videoRef);
   // Video sizes
   const width = useVideoStore((state) => state.width);
   const height = useVideoStore((state) => state.height);
 
   // Processing trigger
   const [processing, setProcessing] = useState(false);
-  const buttonState = useButtonStore((state)=> state.buttonState);
+  const buttonState = useButtonStore((state) => state.buttonState);
 
   const resetCanvas = useCallback(() => {
     outputElement.current?.getContext("2d")?.clearRect(0, 0, width, height);
-  }, [height, width])
+  }, [height, width]);
 
   // Set references to store
   useEffect(() => {
@@ -52,14 +52,13 @@ export default function Canvas() {
       };
       processingImage();
     }
-      
   }, [
     processing,
     buttonState,
     videoElement,
     inputElement,
     outputElement,
-    resetCanvas
+    resetCanvas,
   ]);
 
   return (

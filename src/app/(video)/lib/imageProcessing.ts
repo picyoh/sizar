@@ -1,5 +1,6 @@
 import { RefObject } from "react";
 import cv from "@/app/(video)/service/cv";
+import { drawBoxes } from "./drawBoxes";
 
 export async function imageProcessing(
   videoElement: RefObject<HTMLVideoElement | null>,
@@ -7,7 +8,7 @@ export async function imageProcessing(
   outputElement: RefObject<HTMLCanvasElement | null>,
   mode: string[]
 ) {
-  const video = videoElement.current;
+  const frame = videoElement.current;
   // Get contexts
   const inputCtx = inputElement.current?.getContext("2d", {
     willReadFrequently: true,
@@ -15,15 +16,25 @@ export async function imageProcessing(
   const outputCtx = outputElement.current?.getContext("2d", {
     willReadFrequently: true,
   });
-  if (video && inputCtx && outputCtx) {
-    //Get displayed video size
-    const width = video.clientWidth;
-    const height = video.clientHeight;
-    // Draw video to canvas
-    inputCtx.drawImage(video, 0, 0, width, height);
-    // Get video stream image
+  if (frame && inputCtx && outputCtx) {
+    //Get displayed frame size
+    const width = frame.clientWidth;
+    const height = frame.clientHeight;
+    // Draw frame to canvas
+    inputCtx.drawImage(frame, 0, 0, width, height);
+    // Get frame image
     const inputImage = inputCtx.getImageData(0, 0, width, height);
-    const processedImage = await cv.processImage({inputImage, mode});
-    outputCtx.putImageData(processedImage.data.payload, 0, 0);
+    // Get message from worker
+    const message = await cv.processImage({ inputImage, mode });
+    // Get boxes
+    const boxes = message.data.payload;
+    // reset Canvas
+    outputCtx.clearRect(0, 0, width, height);
+    if(boxes.colorSpace){
+      outputCtx.putImageData(boxes, 0, 0);
+    }else{
+      // Draw boxes
+      drawBoxes(outputCtx, boxes);
+    }
   }
 }

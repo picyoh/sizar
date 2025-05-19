@@ -9,7 +9,7 @@ export default function Footer() {
     { id:"buymeacofee", href: "https://www.buymeacoffee.com/manures", icon: <SiBuymeacoffee /> },
     { id:"linkedin", href: "https://www.buymeacoffee.com/manures", icon: <SiLinkedin /> },
     { id:"reddit", href: "https://www.buymeacoffee.com/manures", icon: <SiReddit /> },
-    { id:"quaeres", href: "https://www.buymeacoffee.com/manures", src:"/globe.svg", alt:"Manures icon"},
+    { id:"quaeres", href: "https://www.buymeacoffee.com/manures", src:"/img/globe.svg", alt:"Manures icon"},
   ];
 
   const links = [
@@ -25,7 +25,7 @@ export default function Footer() {
         <div className="">
           <Image
             aria-hidden
-            src="/toise.svg"
+            src="/img/toise.svg"
             alt="Filler"
             width={72}
             height={72}
