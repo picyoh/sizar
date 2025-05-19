@@ -28,7 +28,7 @@ function CvUtils() {
         src.copyTo(dst);
         break;
       case 3:
-        cv.cvtColor(src, dst, cv.COLOR_BGR2RGBA);
+        cv.cvtColor(src, dst, cv.COLOR_RGB2RGBA);
         break;
       case 1:
         cv.cvtColor(src, dst, cv.COLOR_GRAY2RGBA);

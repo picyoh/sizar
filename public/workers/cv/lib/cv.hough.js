@@ -9,7 +9,8 @@ function CvHough() {
     cv.Canny(src, src, 50, 120, 3);
     // Hough
     cv.HoughLines(src, lines, 1, Math.PI / 180, 75, 0, 0, 0, Math.PI);
-    console.log(lines.rows)
+    // Init Array
+    const lineArray = [];
     // Draw lines
     for (let i = 0; i < lines.rows; i++) {
       // Get results
@@ -23,8 +24,10 @@ function CvHough() {
       const startPoint = { x: x0 - 1000 * b, y: y0 + 1000 * a };
       const endPoint = { x: x0 + 1000 * b, y: y0 - 1000 * a };
       cv.line(dst, startPoint, endPoint, [255, 0, 0, 255]);
+      lineArray.push({x: startPoint, y:endPoint})
     }
-
+    // TODO: get intersections to draw boxes and return result
+    console.log(lineArray)
     const result = cvUtils.imageDataFromMat(dst);
 
     dst.delete();

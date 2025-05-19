@@ -5,6 +5,7 @@ async function waitForOpenCV(callbackFn) {
   cvUtils = cvUtils instanceof Promise ? await cvUtils : cvUtils;
   cvDnn = cvDnn instanceof Promise ? await cvDnn : cvDnn;
   cvBox = cvBox instanceof Promise ? await cvBox : cvBox;
+  cvContours = cvContours instanceof Promise ? await cvContours : cvContours;
 
   // TODO: create a promise on laoding
   // create files on cv file systems
@@ -33,7 +34,7 @@ function processImage({ msg, payload }) {
   let boxes;
   // Process image
   if (mode.includes("surface")) {
-    boxes = cvHough.process(src);
+    boxes = cvContours.process(src);
   }
   if (mode.includes("object")) {
     boxes = cvDnn.process(src);
@@ -53,6 +54,7 @@ onmessage = function (e) {
         "./lib/cv.dnn.js",
         "./lib/cv.hough.js",
         "./lib/cv.box.js",
+        "./lib/cv.contours.js",
       ];
       // Import scripts
       scripts.map((script) => importScripts(script));
