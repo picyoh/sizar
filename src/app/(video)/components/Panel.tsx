@@ -1,9 +1,14 @@
 import { useEffect, useRef } from "react";
 import Button from "./Button";
 import { TbHexagon3D, TbCube3dSphere } from "react-icons/tb";
+import { LiaHandMiddleFingerSolid } from "react-icons/lia";
 import useButtonStore from "@/app/(video)/store/buttonStore";
 
 export default function Panel() {
+  // Get Select button reference
+  const selectRef = useRef<HTMLButtonElement | null>(null);
+  const setSelectRef = useButtonStore((state) => state.setObjectRef);
+  
   // Get Object button reference
   const objectRef = useRef<HTMLButtonElement | null>(null);
   const setObjectRef = useButtonStore((state) => state.setObjectRef);
@@ -17,6 +22,12 @@ export default function Panel() {
   // Button description
   const content = [
     {
+      id: "select",
+      title: "Selectionner un objet",
+      icon: <LiaHandMiddleFingerSolid className={iconClassName} />,
+      ref: selectRef,
+    },
+    {
       id: "object",
       title: "Detection d'objets",
       icon: <TbHexagon3D className={iconClassName} />,
@@ -28,6 +39,7 @@ export default function Panel() {
       icon: <TbCube3dSphere className={iconClassName} />,
       ref: surfaceRef,
     },
+    
   ];
 
   useEffect(() => {

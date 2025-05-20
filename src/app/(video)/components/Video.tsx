@@ -46,6 +46,7 @@ export default function Video() {
   }, [rect, setWidth, setHeight]);
 
   // TODO: fine tune ready display when ready
+  // TODO: handle error and no camera cases
   // set ready when openCV loaded and sizes are set
   useEffect(() => {
     if (ratio && cvLoaded && ratio * height === width) {
