@@ -19,7 +19,7 @@ function CvDnn() {
   }
 
   // Read Dnn result and extract boxes
-  function getBoxesFromSSD(result, confThreshold, srcWidth, srcHeight, labels) {
+  function getBoxesFromSSD(result, confThreshold, srcWidth, srcHeight, classes) {
     let boxes = [];
     // Result to float
     const resultData = result.data32F;
@@ -41,10 +41,16 @@ function CvDnn() {
         // Deduct sizes
         const width = right - left;
         const height = bottom - top;
+        // Get label
+        const label = classes[vector[1] - 1].label;
+        // Get height
+        const avgHeight = classes[vector[1] - 1].avgHeight;
         // Push box
         boxes.push({
+          id: "object_" + i,
           type: "object",
-          classId: labels[vector[1] - 1],
+          label: label,
+          avgHeight: avgHeight,
           confidence: confidence,
           bounding: [left, top, width, height],
         });
@@ -60,9 +66,8 @@ function CvDnn() {
     const modelPath = "/dnn/mobilenet_iter_73000.caffemodel";
 
     // Read recognition labels from file
-    const file = cv.FS.readFile("/dnn/object_detection_classes_pascal_voc.txt", { encoding: "utf8" });
-    const labels = file.split("\n").filter((element) => element !== "");
-    
+    const file = cv.FS.readFile("/dnn/object_detection_classes_modif.json", { encoding: "utf8" });
+    const classes = JSON.parse(file).data;
     // Model params for blob
     const inputSize = [300, 300];
     const mean = [127.5, 127.5, 127.5];
@@ -72,7 +77,7 @@ function CvDnn() {
     const input = cvUtils.getBlobFromImage(src, inputSize, mean, std, swapRB);
     //console.log(input)
     console.info("readNetwork")
-    
+
     // Set network input
     const net = cv.readNet(configPath, modelPath);
     net.setInput(input);
@@ -83,13 +88,13 @@ function CvDnn() {
     // Get process time
     const time = performance.now() - start;
     console.info(`Time : ${Math.round(time) / 1000} seconds`)
-    
+
     // Boxes Params
     const width = src.matSize[1];
     const height = src.matSize[0];
     const confThreshold = 0.5;
     // Process result
-    const boxes = getBoxesFromSSD(result, confThreshold, width, height, labels);
+    const boxes = getBoxesFromSSD(result, confThreshold, width, height, classes);
 
     input.delete();
     net.delete();

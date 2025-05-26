@@ -1,19 +1,19 @@
 async function waitForOpenCV(callbackFn) {
-  // TODO: promiseAll ?
+  // TODO: implement module on worker
   // Load scripts
   cv = cv instanceof Promise ? await cv : cv;
   cvUtils = cvUtils instanceof Promise ? await cvUtils : cvUtils;
   cvDnn = cvDnn instanceof Promise ? await cvDnn : cvDnn;
   cvBox = cvBox instanceof Promise ? await cvBox : cvBox;
   cvContours = cvContours instanceof Promise ? await cvContours : cvContours;
+  cvCamshift = cvCamshift instanceof Promise ? await cvCamshift : cvCamshift;
 
-  // TODO: create a promise on laoding
   // create files on cv file systems
   cv.FS.mkdir("/dnn");
   const models = [
     "./lib/model/configMobNetSSD.prototxt",
     "./lib/model/mobilenet_iter_73000.caffemodel",
-    "./lib/model/object_detection_classes_pascal_voc.txt"
+    "./lib/model/object_detection_classes_modif.json"
   ]
   models.map((model) => {
     cvDnn.loadDnn(model)
@@ -29,16 +29,34 @@ function processImage({ msg, payload }) {
   // Mat from imageDate
   const src = cv.matFromImageData(payload.inputImage);
   // Get mode
-  const mode = payload.mode;
+  const modes = payload.modes;
   // Init boxes
   let boxes;
-  // Process image
-  if (mode.includes("surface")) {
-    boxes = cvContours.process(src);
+  // Loop on modes
+  for (let i = 0; i < modes.length; i++) {
+    // Process image
+    switch (modes[i]) {
+      case "select":
+        boxes = cvCamshift.init(src);
+        break;
+      case "object":
+        console.log(modes[i])
+        boxes = cvDnn.process(src);
+        break;
+      case "surface":
+        boxes = cvContours.process(src);
+        break;
+      case "tracking":
+        boxes = cvCamshift.init(src, boxes)
+        break;
+      default:
+        console.error("wrong mode");
+        break;
+    }
   }
-  if (mode.includes("object")) {
-    boxes = cvDnn.process(src);
-  }
+  //TODO: remove logs
+  //console.log(boxes)
+
   // Post message and convert matToImageData
   postMessage({ msg, payload: boxes });
   // Delete source image Mat
@@ -55,6 +73,7 @@ onmessage = function (e) {
         "./lib/cv.hough.js",
         "./lib/cv.box.js",
         "./lib/cv.contours.js",
+        "./lib/cv.camshift.js",
       ];
       // Import scripts
       scripts.map((script) => importScripts(script));

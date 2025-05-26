@@ -1,0 +1,24 @@
+{
+  "data": [
+    { "label": "aeroplane", "avgHeight": 0 },
+    { "label": "bicycle", "avgHeight": 105 },
+    { "label": "bird", "avgHeight": 0 },
+    { "label": "boat", "avgHeight": 0 },
+    { "label": "bottle", "avgHeight": 270 },
+    { "label": "bus", "avgHeight": 0 },
+    { "label": "car", "avgHeight": 0 },
+    { "label": "cat", "avgHeight": 0 },
+    { "label": "chair", "avgHeight": 900 },
+    { "label": "cow", "avgHeight": 0 },
+    { "label": "diningtable", "avgHeight": 735 },
+    { "label": "dog", "avgHeight": 0 },
+    { "label": "horse", "avgHeight": 0 },
+    { "label": "motorbike", "avgHeight": 0 },
+    { "label": "person", "avgHeight": 1680 },
+    { "label": "pottedplant", "avgHeight": 0 },
+    { "label": "sheep", "avgHeight": 0 },
+    { "label": "sofa", "avgHeight": 850 },
+    { "label": "train", "avgHeight": 0 },
+    { "label": "tvmonitor", "avgHeight": 0 }
+  ]
+}

@@ -1,29 +1,27 @@
 import { createRef, RefObject } from "react";
 import { create } from "zustand";
 
+//TODO: remove tracking and replace by boxes.length > 0
+
 interface Store {
-  buttonState: string[];
-  selectRef: RefObject<HTMLButtonElement | null>;
-  objectRef: RefObject<HTMLButtonElement | null>;
-  surfaceRef: RefObject<HTMLButtonElement | null>;
+  modes: string[];
+  boxes : string[],
+  tracking: string[];
 }
 
 interface Action {
-  setButtonState: (buttonState: Store["buttonState"]) => void;
-  setSelectRef: (objectRef: Store["objectRef"]) => void;
-  setObjectRef: (objectRef: Store["objectRef"]) => void;
-  setSurfaceRef: (surfaceRef: Store["objectRef"]) => void;
+  setModes: (modes: Store["modes"]) => void;
+  setBoxes: (boxes: Store["boxes"]) => void;
+  setTracking: (tracking: Store["tracking"]) => void;
 }
 
 const useButtonStore = create<Store & Action>((set) => ({
-  buttonState: [],
-  setButtonState: (buttonState) => set(() => ({ buttonState: buttonState })),
-  selectRef: createRef<HTMLButtonElement | null>(),
-  setSelectRef: (selectRef) => set(() => ({ selectRef: selectRef })),
-  objectRef: createRef<HTMLButtonElement | null>(),
-  setObjectRef: (objectRef) => set(() => ({ objectRef: objectRef })),
-  surfaceRef: createRef<HTMLButtonElement | null>(),
-  setSurfaceRef: (surfaceRef) => set(() => ({ surfaceRef: surfaceRef })),
+  modes: [],
+  setModes: (modes) => set(() => ({ modes: modes })),
+  boxes: [],
+  setBoxes: (boxes) => set(()=> ({ boxes : boxes})),
+  tracking: [],
+  setTracking: (tracking) => set(()=> ({ tracking: tracking})),
 }));
 
 export default useButtonStore;

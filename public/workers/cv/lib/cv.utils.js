@@ -1,5 +1,18 @@
 function CvUtils() {
 
+  async function getJsonFile(file) {
+    try {
+      const response = await fetch(file);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      return await response.json();
+    }
+    catch (error) {
+      console.error(error.message);
+    }
+  }
+
   // Convert Mat to Blob
   function getBlobFromImage(image, inputSize, mean, std, swapRB) {
     // empty Mat
@@ -8,10 +21,10 @@ function CvUtils() {
     cv.cvtColor(image, matC3, cv.COLOR_RGBA2BGR);
     // get blob
     let blob = cv.blobFromImage(
-      matC3, 
-      std, 
+      matC3,
+      std,
       new cv.Size(inputSize[1], inputSize[0]),
-      new cv.Scalar(mean[0], mean[1], mean[2]), 
+      new cv.Scalar(mean[0], mean[1], mean[2]),
       swapRB
     );
     matC3.delete();
@@ -45,7 +58,7 @@ function CvUtils() {
     dst.delete();
     return imgData;
   }
-  
+
   // TODO: set printError 
   function printError(err) {
     if (typeof err === 'undefined') {
@@ -71,6 +84,7 @@ function CvUtils() {
 
   // return immutable Object
   return Object.freeze({
+    getJsonFile,
     getBlobFromImage,
     imageDataFromMat,
     printError,

@@ -1,21 +1,21 @@
-import { useEffect, useRef } from "react";
-import Button from "./Button";
-import { TbHexagon3D, TbCube3dSphere } from "react-icons/tb";
-import { LiaHandMiddleFingerSolid } from "react-icons/lia";
-import useButtonStore from "@/app/(video)/store/buttonStore";
+import { useEffect, useRef, useState } from "react";
+import { TbHexagon3D, TbCube3dSphere, TbHandFinger } from "react-icons/tb";
+import { imageProcessing } from "../lib/imageProcessing";
+import useButtonStore from "../store/buttonStore";
+import useVideoStore from "../store/videoStore";
 
 export default function Panel() {
-  // Get Select button reference
-  const selectRef = useRef<HTMLButtonElement | null>(null);
-  const setSelectRef = useButtonStore((state) => state.setObjectRef);
-  
-  // Get Object button reference
-  const objectRef = useRef<HTMLButtonElement | null>(null);
-  const setObjectRef = useButtonStore((state) => state.setObjectRef);
+  // Get modes params from store
+  const modes = useButtonStore((state) => state.modes);
+  const setButtonState = useButtonStore((state) => state.setModes);
 
-  // Get Surface button reference
-  const surfaceRef = useRef<HTMLButtonElement | null>(null);
-  const setSurfaceRef = useButtonStore((state) => state.setSurfaceRef);
+  // Trigger Actions on click
+  function buttonAction(e: React.MouseEvent<HTMLButtonElement>) {
+    const id = e.currentTarget.id;
+    if (modes.includes(id))
+      setButtonState(modes.filter((element) => element !== id));
+    else setButtonState([...modes, id]);
+  }
 
   // Set style to buttons icons
   const iconClassName = "pointer-events-none";
@@ -24,40 +24,33 @@ export default function Panel() {
     {
       id: "select",
       title: "Selectionner un objet",
-      icon: <LiaHandMiddleFingerSolid className={iconClassName} />,
-      ref: selectRef,
+      icon: <TbHandFinger className={iconClassName} />,
     },
     {
       id: "object",
       title: "Detection d'objets",
       icon: <TbHexagon3D className={iconClassName} />,
-      ref: objectRef,
     },
     {
       id: "surface",
       title: "Detection de surfaces",
       icon: <TbCube3dSphere className={iconClassName} />,
-      ref: surfaceRef,
     },
-    
   ];
-
-  useEffect(() => {
-    setObjectRef(objectRef);
-    setSurfaceRef(surfaceRef);
-  }, [setObjectRef, setSurfaceRef]);
 
   return (
     <div className="flex justify-evenly items-center">
       {content.map((element) => {
         return (
-          <Button
+          <button
             key={element.id}
             id={element.id}
             title={element.title}
-            icon={element.icon}
-            ref={element.ref}
-          />
+            onClick={buttonAction}
+            className="flex p-4 border-2 border-solid"
+          >
+            {element.icon}
+          </button>
         );
       })}
     </div>
