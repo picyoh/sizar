@@ -1,34 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useVideoStream from "@/app/(video)/hooks/useVideoStream";
 import useResizeObserver from "@/app/(video)/hooks/useResizeObserver";
 import useVideoStore from "@/app/(video)/store/videoStore";
 
 export default function Video() {
   //TODO: resizeObserver trigger when resizing window ?
-  // Video element and its sizes
+  // Get video element and its sizes
   const [videoElement, rect] = useResizeObserver();
+  // Store video DOM reference
+  const setVideoRef = useVideoStore((state) => state.setVideoRef);
   // Video stream from camera
   const { stream, ratio } = useVideoStream();
+  // Store ratio
+  const setRatio = useVideoStore((state) => state.setRatio);
+
   // Store width
   const width = useVideoStore((state) => state.width);
   const setWidth = useVideoStore((state) => state.setWidth);
   // Store height
-  const height = useVideoStore((state)=> state.height)
+  const height = useVideoStore((state) => state.height);
   const setHeight = useVideoStore((state) => state.setHeight);
-  // Store ratio
-  const setRatio = useVideoStore((state) => state.setRatio);
-  // Store DOM reference
-  const setRef = useVideoStore((state) => state.setVideoRef);
-  const cvLoaded = useVideoStore((state) => state.cvLoaded)
 
+  // Get input canvas element
+  const inputElement = useRef<HTMLCanvasElement>(null);
+  // Store input canvas DOM reference
+  const setInputRef = useVideoStore((state) => state.setInputRef);
+
+  // Loaded ?
+  const cvLoaded = useVideoStore((state) => state.cvLoaded);
 
   // TODO: set real ready state in store to lock buttons cf Video
   const ready = true;
 
   // Set Video reference
   useEffect(() => {
-    setRef(videoElement);
-  }, [videoElement, setRef]);
+    setVideoRef(videoElement);
+  }, [videoElement, setVideoRef]);
+
+  // Set Input canvas reference
+  useEffect(() => {
+    setInputRef(inputElement);
+  }, [inputElement, setInputRef]);
 
   // Get camera stream
   useEffect(() => {
@@ -37,7 +49,6 @@ export default function Video() {
   }, [videoElement, stream, ratio, setRatio]);
 
   // Get displayed video sizes
-
   useEffect(() => {
     // Get maximum dispalyed width
     setWidth(window!.innerWidth);
@@ -57,6 +68,13 @@ export default function Video() {
   return (
     <>
       <video id="camera" width={width} ref={videoElement} autoPlay={true} />
+      <canvas
+        id="input"
+        ref={inputElement}
+        width={width}
+        height={height}
+        className="hidden"
+      />
     </>
   );
 }

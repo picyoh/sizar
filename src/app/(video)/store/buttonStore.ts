@@ -8,9 +8,11 @@ interface Store {
   boxes : string[],
   tracking: string[];
 }
+//TODO: change store
 
 interface Action {
   setModes: (modes: Store["modes"]) => void;
+  removeModes: (modes: Store["modes"]) => void;
   setBoxes: (boxes: Store["boxes"]) => void;
   setTracking: (tracking: Store["tracking"]) => void;
 }
@@ -18,6 +20,7 @@ interface Action {
 const useButtonStore = create<Store & Action>((set) => ({
   modes: [],
   setModes: (modes) => set(() => ({ modes: modes })),
+  removeModes: (modes)=> set(()=> ({modes: []})),
   boxes: [],
   setBoxes: (boxes) => set(()=> ({ boxes : boxes})),
   tracking: [],

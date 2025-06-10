@@ -5,20 +5,20 @@ import { imageProcessing } from "../lib/imageProcessing";
 
 export default function Canvas() {
   // Init canvas elements references
-  const inputElement = useRef<HTMLCanvasElement>(null);
   const outputElement = useRef<HTMLCanvasElement>(null);
-  const setInputRef = useVideoStore((state) => state.setInputRef);
   const setOutputRef = useVideoStore((state) => state.setOutputRef);
-  // Set canvas references to store
+  // Set output canvas references to store
   useEffect(() => {
-    setInputRef(inputElement);
     setOutputRef(outputElement);
-  }, [inputElement, outputElement, setInputRef, setOutputRef]);
+  }, [outputElement, setOutputRef]);
 
   // Get Video params from store
   const videoElement = useVideoStore((state) => state.videoRef);
-  const width = useVideoStore((state) => state.width);
-  const height = useVideoStore((state) => state.height);
+  const width = videoElement.current?.offsetWidth;
+  const height = videoElement.current?.offsetHeight;
+  // Get input canvas element
+  const inputElement = useVideoStore((state) => state.inputRef);
+
   // Get modes from store
   const modes = useButtonStore((state) => state.modes);
   const setModes = useButtonStore((state) => state.setModes);
@@ -38,45 +38,63 @@ export default function Canvas() {
       // Set process
       setProcessing(true);
       // Set props
-      //if (boxes.length > 0) setModes(["tracking"]);
-      const props = {
-        width,
-        height,
-        videoElement,
-        inputElement,
-        outputElement,
-        modes,
-      };
+      if (boxes.length > 0) setModes(["tracking"]);
+      const frame = videoElement.current;
       const processImage = async () => {
-        // get Boxes
-        const result = await imageProcessing(props);
-        setBoxes(result);
-        setProcessing(false);
+        if (frame !== null) {
+          // get Boxes
+          const result = await imageProcessing(
+            frame,
+            inputElement,
+            outputElement,
+            modes,
+            boxes
+          );
+          console.log(result);
+          if (result.boxes !== undefined) {
+            setBoxes(result.boxes);
+          }
+          setProcessing(false);
+        }
       };
       processImage();
     }
   }, [process, modes, boxes]);
 
+  function onMouseDownHandler(
+    e: React.MouseEvent<HTMLCanvasElement, MouseEvent>
+  ) {
+    console.log(`MouseDown x: ${e.clientX}, y:${e.clientY}`);
+  }
+
+  function onMouseUpHandler(
+    e: React.MouseEvent<HTMLCanvasElement, MouseEvent>
+  ) {
+    console.log(`MouseUp x: ${e.clientX}, y:${e.clientY}`);
+  }
+
   //TODO: usecallback or function ?
   const resetCanvas = useCallback(() => {
-    outputElement.current?.getContext("2d")?.clearRect(0, 0, width, height);
+    // get window width & height
+    let winWidth = 0;
+    let winHeight = 0;
+    if (width !== undefined) winWidth = width;
+    if (height !== undefined) winHeight = height;
+    outputElement.current
+      ?.getContext("2d")
+      ?.clearRect(0, 0, winWidth, winHeight);
   }, [height, width]);
 
   return (
     <>
-      <canvas
-        id="input"
-        ref={inputElement}
-        width={width}
-        height={height}
-        className="hidden"
-      />
       <canvas
         id="output"
         ref={outputElement}
         width={width}
         height={height}
         className="absolute top-0 left-0"
+        onMouseDown={(event) => onMouseDownHandler(event)}
+        onMouseUp={(event) => onMouseUpHandler(event)}
       />
     </>
   );

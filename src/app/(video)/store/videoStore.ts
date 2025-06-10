@@ -2,9 +2,11 @@ import { createRef, RefObject } from "react";
 import { create } from "zustand";
 
 interface Store {
+  // TODO: check if really needed
   width: number;
   height: number;
   ratio: number;
+  //
   videoRef: RefObject<HTMLVideoElement | null>;
   inputRef: RefObject<HTMLCanvasElement | null>;
   outputRef: RefObject<HTMLCanvasElement | null>;

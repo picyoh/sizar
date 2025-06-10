@@ -32,6 +32,7 @@ function processImage({ msg, payload }) {
   const modes = payload.modes;
   // Init boxes
   let boxes;
+  let image;
   // Loop on modes
   for (let i = 0; i < modes.length; i++) {
     // Process image
@@ -39,15 +40,17 @@ function processImage({ msg, payload }) {
       case "select":
         boxes = cvCamshift.init(src);
         break;
+      case "tracking":
+        result = cvCamshift.process(src, payload.boxes);
+        boxes = result.boxes;
+        image = result.image;
+        break;
       case "object":
         console.log(modes[i])
         boxes = cvDnn.process(src);
         break;
       case "surface":
         boxes = cvContours.process(src);
-        break;
-      case "tracking":
-        boxes = cvCamshift.init(src, boxes)
         break;
       default:
         console.error("wrong mode");
@@ -58,7 +61,7 @@ function processImage({ msg, payload }) {
   //console.log(boxes)
 
   // Post message and convert matToImageData
-  postMessage({ msg, payload: boxes });
+  postMessage({ msg, payload: {boxes: boxes, image: image}});
   // Delete source image Mat
   src.delete();
 }

@@ -2,8 +2,8 @@
 
 import { Suspense, useEffect } from "react";
 import Loading from "./loading";
-import Video from "@/app/(video)/components/Video";
-import Canvas from "@/app/(video)/components/Canvas";
+import Input from "@/app/(video)/components/Input";
+import Output from "@/app/(video)/components/Output";
 import Panel from "@/app/(video)/components/Panel";
 import useLoadCV from "@/app/(video)/hooks/useLoadOCV";
 import useVideoStore from "@/app/(video)/store/videoStore";
@@ -19,8 +19,8 @@ export default function TryIt() {
   
   return (
     <Suspense fallback={<Loading />}>
-      <Video />
-      <Canvas />
+      <Input />
+      <Output />
       <Panel />
     </Suspense>
   );

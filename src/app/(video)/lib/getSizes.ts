@@ -3,6 +3,7 @@ export default function getSizes(
   height: number,
   width: number
 ) {
+  // TODO: adjust to calc size from a ref
   // get pixel ratio
   const minHeight = avgHeight - Math.round((avgHeight * 20) / 100);
   const maxHeight = avgHeight + Math.round((avgHeight * 20) / 100);

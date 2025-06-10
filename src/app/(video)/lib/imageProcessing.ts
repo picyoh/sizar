@@ -2,25 +2,16 @@ import { RefObject } from "react";
 import cv from "@/app/(video)/service/cv";
 import { drawBoxes } from "./drawBoxes";
 
-interface Props {
-  width: number;
-  height: number;
-  videoElement: RefObject<HTMLVideoElement | null>;
-  inputElement: RefObject<HTMLCanvasElement | null>;
-  outputElement: RefObject<HTMLCanvasElement | null>;
-  modes: string[];
-}
+export async function imageProcessing(
+  frame: HTMLVideoElement,
+  inputElement: RefObject<HTMLCanvasElement | null>,
+  outputElement: RefObject<HTMLCanvasElement | null>,
+  modes: string[],
+  boxes : string[]
+) {
 
-export async function imageProcessing({
-  width,
-  height,
-  videoElement,
-  inputElement,
-  outputElement,
-  modes,
-}: Props) {
-
-  const frame = videoElement.current;
+  const width = frame.offsetWidth;
+  const height = frame.offsetHeight;
   // Get contexts
   const inputCtx = inputElement.current?.getContext("2d", {
     willReadFrequently: true,
@@ -34,23 +25,26 @@ export async function imageProcessing({
     inputCtx.drawImage(frame, 0, 0, width, height);
     // Get frame image
     const inputImage = inputCtx.getImageData(0, 0, width, height);
+    // TODO: Put a loading box before processing
+    //drawBoxes(outputCtx, "loading");
     // Get response from worker
-    const response = await cv.processImage({ inputImage, modes });
+    const response = await cv.processImage({ inputImage, modes, boxes});
     // Get boxes
-    const boxes = response.data.payload;
+    const result = response.data.payload;
     
     //TODO: remove logs
     //console.log(response);
-    
+    console.log(modes)
     // reset Canvas
     outputCtx.clearRect(0, 0, width, height);
     // TODO: remove put image after tests
-    if (boxes.colorSpace) {
-      outputCtx.putImageData(boxes, 0, 0);
+    if (result.image?.colorSpace) {
+      outputCtx.putImageData(result.image, 0, 0);
+      return result;
     } else {
       // Draw boxes
-      drawBoxes(outputCtx, boxes);
-      return boxes;
+      drawBoxes(outputCtx, result.boxes);
+      return result;
     }
   }
 }
