@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { TbHexagon3D, TbCube3dSphere, TbHandFinger } from "react-icons/tb";
 import { imageProcessing } from "../lib/imageProcessing";
-import useButtonStore from "../store/buttonStore";
-import useVideoStore from "../store/videoStore";
+import useButtonStore from "../store/outputStore";
+import useVideoStore from "../store/inputStore";
 
 export default function Panel() {
   // Get modes params from store

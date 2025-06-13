@@ -2,42 +2,38 @@ import { createRef, RefObject } from "react";
 import { create } from "zustand";
 
 interface Store {
-  // TODO: check if really needed
-  width: number;
-  height: number;
-  ratio: number;
-  //
+
   videoRef: RefObject<HTMLVideoElement | null>;
   inputRef: RefObject<HTMLCanvasElement | null>;
   outputRef: RefObject<HTMLCanvasElement | null>;
-  cvLoaded: boolean
+  videoReady: boolean;
+  videoRatio: number;
+  cvLoaded: boolean;
 }
 
 interface Action {
-  setWidth: (width: Store["width"]) => void;
-  setHeight: (height: Store["height"]) => void;
-  setRatio: (width: Store["ratio"]) => void;
+  
   setVideoRef: (videoRef: Store["videoRef"]) => void;
   setInputRef: (inputRef: Store["inputRef"]) => void;
   setOutputRef: (outputRef: Store["outputRef"]) => void;
+  setVideoReady: (videoReady: Store["videoReady"]) => void;
+  setVideoRatio: (videoRatio: Store["videoRatio"]) => void;
   setCvLoaded: (cvLoaded: Store["cvLoaded"]) => void;
 }
 
-const useVideoStore = create<Store & Action>((set) => ({
-  width: 0,
-  setWidth: (width) => set(() => ({ width: width })),
-  height: 0,
-  setHeight: (height) => set(() => ({ height: height })),
-  ratio: 0,
-  setRatio: (ratio) => set(() => ({ ratio: ratio })),
+const useInputStore = create<Store & Action>((set) => ({
   videoRef: createRef<HTMLVideoElement | null>(),
   setVideoRef: (videoRef) => set(() => ({ videoRef: videoRef })),
   inputRef: createRef<HTMLCanvasElement | null>(),
   setInputRef: (inputRef) => set(() => ({ inputRef: inputRef })),
   outputRef: createRef<HTMLCanvasElement | null>(),
   setOutputRef: (outputRef) => set(() => ({ outputRef: outputRef })),
+  videoReady: false,
+  setVideoReady: (videoReady) => set(()=> ({videoReady: videoReady})),
+  videoRatio: 0,
+  setVideoRatio: (videoRatio) => set(()=> ({videoRatio: videoRatio})),
   cvLoaded: false,
-  setCvLoaded: (cvLoaded) => set(()=> ({cvLoaded: cvLoaded}))
+  setCvLoaded: (cvLoaded) => set(() => ({cvLoaded: cvLoaded})),
 }));
 
-export default useVideoStore;
+export default useInputStore;

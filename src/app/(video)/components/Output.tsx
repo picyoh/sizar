@@ -1,40 +1,56 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import useVideoStore from "../store/videoStore";
-import useButtonStore from "../store/buttonStore";
+import { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
+import useInputStore from "../store/inputStore";
+import useButtonStore from "../store/outputStore";
 import { imageProcessing } from "../lib/imageProcessing";
+import useClickOutside from "../hooks/useClickOutside";
+import { useClientWidth } from "../hooks/useClientWidth";
 
 export default function Canvas() {
-  // Init canvas elements references
+
+  // Store output canvas DOM reference
   const outputElement = useRef<HTMLCanvasElement>(null);
-  const setOutputRef = useVideoStore((state) => state.setOutputRef);
-  // Set output canvas references to store
+  const setOutputRef = useInputStore((state) => state.setOutputRef);
   useEffect(() => {
     setOutputRef(outputElement);
   }, [outputElement, setOutputRef]);
 
-  // Get Video params from store
-  const videoElement = useVideoStore((state) => state.videoRef);
-  const width = videoElement.current?.offsetWidth;
-  const height = videoElement.current?.offsetHeight;
-  // Get input canvas element
-  const inputElement = useVideoStore((state) => state.inputRef);
+  // Get Elements from  input store
+  const videoElement = useInputStore((state) => state.videoRef);
+  const inputElement = useInputStore((state) => state.inputRef);
+  const videoRatio = useInputStore((state) => state.videoRatio);
+  // Get canvas sizes
+  const clientWidth = useClientWidth();
+  const width = clientWidth;
+  const [height, setHeight] = useState(0);
+  useEffect(() => {
+    if(videoRatio > 0 && videoRatio !== null){
+      setHeight(clientWidth / videoRatio)
+    }
+  }, [videoRatio]);
 
+  // Get clicks
+  const handleClick = (e: Event) => {
+    console.log(`target: ${e.target}`);
+  };
+  
+  useClickOutside(outputElement, handleClick);
+  
   // Get modes from store
   const modes = useButtonStore((state) => state.modes);
   const setModes = useButtonStore((state) => state.setModes);
 
   // Init process params
   const [processing, setProcessing] = useState(false);
-  const tracking = useButtonStore((state) => state.tracking);
-  const setTracking = useButtonStore((state) => state.setTracking);
   const boxes = useButtonStore((state) => state.boxes);
   const setBoxes = useButtonStore((state) => state.setBoxes);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   // Process image
   useEffect(() => {
     if (modes.length === 0) {
       resetCanvas();
     }
     if (modes.length > 0 && !processing) {
+      if (modes.includes("select")) return;
       // Set process
       setProcessing(true);
       // Set props
@@ -50,7 +66,6 @@ export default function Canvas() {
             modes,
             boxes
           );
-          console.log(result);
           if (result.boxes !== undefined) {
             setBoxes(result.boxes);
           }
@@ -60,18 +75,6 @@ export default function Canvas() {
       processImage();
     }
   }, [process, modes, boxes]);
-
-  function onMouseDownHandler(
-    e: React.MouseEvent<HTMLCanvasElement, MouseEvent>
-  ) {
-    console.log(`MouseDown x: ${e.clientX}, y:${e.clientY}`);
-  }
-
-  function onMouseUpHandler(
-    e: React.MouseEvent<HTMLCanvasElement, MouseEvent>
-  ) {
-    console.log(`MouseUp x: ${e.clientX}, y:${e.clientY}`);
-  }
 
   //TODO: usecallback or function ?
   const resetCanvas = useCallback(() => {
@@ -93,8 +96,6 @@ export default function Canvas() {
         width={width}
         height={height}
         className="absolute top-0 left-0"
-        onMouseDown={(event) => onMouseDownHandler(event)}
-        onMouseUp={(event) => onMouseUpHandler(event)}
       />
     </>
   );

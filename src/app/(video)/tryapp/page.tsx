@@ -6,7 +6,7 @@ import Input from "@/app/(video)/components/Input";
 import Output from "@/app/(video)/components/Output";
 import Panel from "@/app/(video)/components/Panel";
 import useLoadCV from "@/app/(video)/hooks/useLoadOCV";
-import useVideoStore from "@/app/(video)/store/videoStore";
+import useVideoStore from "@/app/(video)/store/inputStore";
 
 export default function TryIt() {
   // Load CV

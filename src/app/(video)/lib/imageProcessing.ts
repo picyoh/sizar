@@ -44,6 +44,7 @@ export async function imageProcessing(
     } else {
       // Draw boxes
       drawBoxes(outputCtx, result.boxes);
+      console.log(result)
       return result;
     }
   }

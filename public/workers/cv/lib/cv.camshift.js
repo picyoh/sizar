@@ -6,8 +6,8 @@ function CvCamShift() {
   let termCrit;
 
   function init(src, boxes) {
-    console.log(boxes)
-    if (boxes === undefined) {
+    console.log(src, boxes)
+    if (boxes[0] === undefined) {
       //TODO: select on screen
       // Mock up
       boxes = [{
@@ -26,8 +26,9 @@ function CvCamShift() {
     //const trackWindow = new cv.Rect(left, top, width, height)
     
     trackWindow = new cv.Rect(left, top, width, height);
-    cv.cvtColor(src, src, cv.COLOR_RGBA2RGB); 
-    // Bilateral Filter
+    // Convert to
+    
+    // Median Blur
     cv.medianBlur(src, src, 5); 
 
     // Set up Region of interest (ROI) for tracking
