@@ -1,9 +1,7 @@
-"use client";
-
 import { useState, useLayoutEffect, useEffect, useRef, RefObject } from "react";
 import useVideoStream from "@/app/(video)/hooks/useVideoStream";
 import useInputStore from "@/app/(video)/store/inputStore";
-import { useClientWidth } from "../hooks/useClientWidth";
+import useClientWidth from "../hooks/useClientWidth";
 
 export default function Video() {
   // Store video DOM reference
@@ -22,7 +20,7 @@ export default function Video() {
 
   // Get video stream from camera
   const { stream, ratio } = useVideoStream();
-  const setVideoRatio = useInputStore((state)=> state.setVideoRatio);
+  const setVideoRatio = useInputStore((state) => state.setVideoRatio);
   // Get window size
   const clientWidth = useClientWidth();
   // Set up sizes
@@ -32,27 +30,22 @@ export default function Video() {
   // Get camera stream
   useEffect(() => {
     videoElement!.current!.srcObject = stream!;
-    setVideoRatio(ratio!)
+    setVideoRatio(ratio!);
   }, [videoElement, stream, ratio]);
-  
+
   // Adjust video sizes
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     setWidth(clientWidth);
-    if(ratio! && ratio > 0){
+    if (ratio! && ratio > 0) {
       setHeight(clientWidth / ratio);
     }
-  },[clientWidth, ratio])  
+  }, [clientWidth, ratio]);
 
   const [ready, setReady] = useState(false);
-  
+
   return (
     <>
-      <video
-        id="camera"
-        width={width}
-        ref={videoElement}
-        autoPlay={true}
-      />
+      <video id="camera" width={width} ref={videoElement} autoPlay={true} />
       <canvas
         id="input"
         ref={inputElement}

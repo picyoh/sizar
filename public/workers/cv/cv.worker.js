@@ -26,7 +26,6 @@ async function waitForOpenCV(callbackFn) {
 }
 
 function processImage({ msg, payload }) {
-  console.log(payload.inputImage);
   // Mat from imageDate
   const src = cv.matFromImageData(payload.inputImage);
   // Get mode
@@ -39,10 +38,11 @@ function processImage({ msg, payload }) {
     // Process image
     switch (modes[i]) {
       case "select":
-        boxes = cvCamshift.init(src, payload.boxes);
+        console.log(payload)
+        boxes = cvCamshift.init(src, payload.selectBox);
         break;
       case "tracking":
-        result = cvCamshift.process(src, payload.boxes);
+        result = cvCamshift.process(src, payload.objectBoxes);
         boxes = result.boxes;
         image = result.image;
         break;

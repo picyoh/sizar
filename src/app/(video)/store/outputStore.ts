@@ -1,30 +1,57 @@
-import { createRef, RefObject } from "react";
 import { create } from "zustand";
 
-//TODO: remove tracking and replace by boxes.length > 0
+type Select = {
+  selectStart: { x: number; y: number };
+  selectEnd: { x: number; y: number };
+  selectBox: Array<Box>;
+};
 
-interface Store {
+type Boxes = {
   modes: string[];
-  boxes : string[],
-  tracking: string[];
-}
-//TODO: change store
+  objectBoxes: string[];
+  surfaceBoxes: string[];
+};
 
-interface Action {
-  setModes: (modes: Store["modes"]) => void;
-  removeModes: (modes: Store["modes"]) => void;
-  setBoxes: (boxes: Store["boxes"]) => void;
-  setTracking: (tracking: Store["tracking"]) => void;
-}
+type Actions = {
+  setModes: (id: string) => void;
+  resetModes: () => void;
+  setSelectStart: (selectStart: Select["selectStart"]) => void;
+  setSelectEnd: (selectEnd: Select["selectEnd"]) => void;
+  setSelectBox: (tracking: Select["selectBox"]) => void;
+  resetSelect: () => void;
+  setObjectBoxes: (tracking: Boxes["objectBoxes"]) => void;
+  setSurfaceBoxes: (tracking: Boxes["surfaceBoxes"]) => void;
+};
 
-const useButtonStore = create<Store & Action>((set) => ({
+const initialSelectPoint: Select = {
+  selectStart: { x: 0, y: 0 },
+  selectEnd: { x: 0, y: 0 },
+  selectBox: [],
+};
+
+const initialBoxes: Boxes = {
   modes: [],
-  setModes: (modes) => set(() => ({ modes: modes })),
-  removeModes: (modes)=> set(()=> ({modes: []})),
-  boxes: [],
-  setBoxes: (boxes) => set(()=> ({ boxes : boxes})),
-  tracking: [],
-  setTracking: (tracking) => set(()=> ({ tracking: tracking})),
+  objectBoxes: [],
+  surfaceBoxes: [],
+};
+
+const useOutputStore = create<Select & Boxes & Actions>((set) => ({
+  ...initialSelectPoint,
+  setSelectStart: (selectStart) => set(() => ({ selectStart: selectStart })),
+  setSelectEnd: (selectEnd) => set(() => ({ selectEnd: selectEnd })),
+  setSelectBox: (selectBox) => set(() => ({ selectBox: selectBox })),
+  resetSelect: () => set(initialSelectPoint),
+  ...initialBoxes,
+  setModes: (id: string) =>
+    set((state) => ({
+      modes: [...state.modes].includes(id)
+        ? [...state.modes.filter((element) => element !== id)]
+        : [...state.modes, id],
+    })),
+  resetModes: () => set({ modes: [] }),
+  setObjectBoxes: (objectBoxes) => set(() => ({ objectBoxes: objectBoxes })),
+  setSurfaceBoxes: (surfaceBoxes) =>
+    set(() => ({ surfaceBoxes: surfaceBoxes })),
 }));
 
-export default useButtonStore;
+export default useOutputStore;

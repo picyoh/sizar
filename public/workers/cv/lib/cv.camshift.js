@@ -6,19 +6,6 @@ function CvCamShift() {
   let termCrit;
 
   function init(src, boxes) {
-    console.log(src, boxes)
-    if (boxes[0] === undefined) {
-      //TODO: select on screen
-      // Mock up
-      boxes = [{
-        id: "object_0",
-        type: "select",
-        label: "selected",
-        avgHeight: 850,
-        confidence: 0.8,
-        bounding: [310, 315, 202, 242],
-      }];
-    }
     /*     for (let i = 0; i < boxes.length; i++) {
           const [left, top, width, height] = boxes[i].bounding; */
     const [left, top, width, height] = boxes[0].bounding;
@@ -127,6 +114,7 @@ function CvCamShift() {
     const y = Math.round(minY);
     const width = Math.round(maxX) - x;
     const height = Math.round(maxY) - y;
+    console.log(x, y)
     boxes[0].bounding = [x, y, width, height];
   return {boxes : boxes, image: image};
   }

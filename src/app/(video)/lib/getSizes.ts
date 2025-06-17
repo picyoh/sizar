@@ -4,15 +4,16 @@ export default function getSizes(
   width: number
 ) {
   // TODO: adjust to calc size from a ref
-  // get pixel ratio
+  // approximate a pixel size  
   const minHeight = avgHeight - Math.round((avgHeight * 20) / 100);
   const maxHeight = avgHeight + Math.round((avgHeight * 20) / 100);
+  // Get min and max pixel ratios
   const minHeightRatio = minHeight / height;
   const maxHeightRatio = maxHeight / height;
-
+  // Get approximate width
   const minWidth = width * minHeightRatio;
   const maxWidth = width * maxHeightRatio;
   const avgWidth = Math.round(minWidth + maxWidth / 2);
-  const sizes = { width: avgWidth.toString(), height: avgHeight.toString() };
-  return sizes;
+  // Return sizes
+  return { width: avgWidth.toString(), height: avgHeight.toString() };
 }

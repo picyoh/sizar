@@ -1,22 +1,16 @@
-import { useEffect, useRef, useState } from "react";
 import { TbHexagon3D, TbCube3dSphere, TbHandFinger } from "react-icons/tb";
-import { imageProcessing } from "../lib/imageProcessing";
-import useButtonStore from "../store/outputStore";
-import useVideoStore from "../store/inputStore";
+import useOutputStore from "../store/outputStore";
 
 export default function Panel() {
   // Get modes params from store
-  const modes = useButtonStore((state) => state.modes);
-  const setButtonState = useButtonStore((state) => state.setModes);
-
+  const modes = useOutputStore((state) => state.modes);
+  const setModes = useOutputStore((state) => state.setModes);
+  
   // Trigger Actions on click
   function buttonAction(e: React.MouseEvent<HTMLButtonElement>) {
     const id = e.currentTarget.id;
-    if (modes.includes(id))
-      setButtonState(modes.filter((element) => element !== id));
-    else setButtonState([...modes, id]);
+    setModes(id);
   }
-
   // Set style to buttons icons
   const iconClassName = "pointer-events-none";
   // Button description

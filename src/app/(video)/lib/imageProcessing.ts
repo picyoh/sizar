@@ -7,7 +7,8 @@ export async function imageProcessing(
   inputElement: RefObject<HTMLCanvasElement | null>,
   outputElement: RefObject<HTMLCanvasElement | null>,
   modes: string[],
-  boxes : string[]
+  selectBox: Box[],
+  objectBoxes : string[]
 ) {
 
   const width = frame.offsetWidth;
@@ -28,13 +29,12 @@ export async function imageProcessing(
     // TODO: Put a loading box before processing
     //drawBoxes(outputCtx, "loading");
     // Get response from worker
-    const response = await cv.processImage({ inputImage, modes, boxes});
+    const response = await cv.processImage({ inputImage, modes, selectBox, objectBoxes});
     // Get boxes
     const result = response.data.payload;
     
     //TODO: remove logs
     //console.log(response);
-    console.log(modes)
     // reset Canvas
     outputCtx.clearRect(0, 0, width, height);
     // TODO: remove put image after tests

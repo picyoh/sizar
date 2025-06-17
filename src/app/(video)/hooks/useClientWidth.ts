@@ -2,7 +2,7 @@
 
 import { useState, useLayoutEffect } from "react";
 
-export function useClientWidth() {
+export default function useClientWidth() {
   const [width, setWidth] = useState(0);
   
   useLayoutEffect(()=>{
